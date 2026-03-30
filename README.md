@@ -4,4 +4,4 @@ Denis Butorin
 
 Имя пользователя: cheerful-user 
 
-denissimo00@mail.ru — укажите свой e-mail
+denissimo00@mail.ru
