@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Личный кабинет</h1>
+<h2>Ваши данные:</h2>
+<p><strong>Имя:</strong> {{ client.first_name }} {{ client.last_name }}</p>
+<p><strong>Телефон:</strong> {{ client.phone_number }}</p>
+<p><strong>Email:</strong> {{ client.email }}</p>
+<!-- ... другие поля ... -->
+
+
+<h2>История заказов:</h2>
+{% if orders %}
+<ul>
+  {% for order in orders %}
+  <li>
+    Заказ №{{ order.id }} от {{ order.created_at }}
+      <li class="mb-3">
+      Заказ №{{ order.id }} от {{ order.created_at|date:"d.m.Y" }}
+      (Статус: {{ order.status }})
+       <!-- НОВАЯ ССЫЛКА -->
+      <div class="mt-2">
+        <a href="{% url 'order_detail' order.id %}" class="btn btn-sm btn-outline-primary">
+          Просмотреть детали
+        </a>
+      </div>
+    </li>
+  {% empty %}
+    <li>У вас пока нет заказов.</li>
+  {% endfor %}
+    <!-- Ссылка для просмотра деталей -->
+
+</ul>
+{% else %}
+<p>Заказов пока нет.</p>
+{% endif %}
+{% endblock %}

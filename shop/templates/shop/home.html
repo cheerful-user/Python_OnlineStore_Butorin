@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1> </h1>
+<div style="display: flex; gap: 20px;">
+
+  <div style="flex: 1; border: 1px solid #ccc; padding: 20px;">
+    <h2>Регистрация для новых клиентов</h2>
+    <form method="post">
+      {% csrf_token %}
+
+      <h3> </h3>
+
+      <!-- Блок для общих ошибок формы регистрации пользователя (например, "Такое имя уже занято") -->
+      {% if register_user_form.non_field_errors %}
+        <div class="alert alert-danger">
+          {{ register_user_form.non_field_errors.as_text }}
+        </div>
+      {% endif %}
+
+      <!-- Django автоматически покажет ошибки для каждого поля (username, password1, password2) -->
+      {{ register_user_form.as_p }}
+
+      <h3>Ваши данные</h3>
+
+      <!-- Блок для общих ошибок формы данных клиента -->
+      {% if register_client_form.non_field_errors %}
+        <div class="alert alert-danger">
+          {{ register_client_form.non_field_errors.as_text }}
+        </div>
+      {% endif %}
+
+      <!-- Django автоматически покажет ошибки для полей (last_name, phone_number и т.д.) -->
+      {{ register_client_form.as_p }}
+
+      <button type="submit" name="register_submit" class="btn btn-success">Зарегистрироваться</button>
+    </form>
+  </div>
+
+  <div style="flex: 1; border: 1px solid #ccc; padding: 20px;">
+    <h2>Вход для зарегистрированных клиентов</h2>
+    <form method="post">
+      {% csrf_token %}
+
+      <!-- Блок для общих ошибок формы входа (например, "Неверный логин или пароль") -->
+      {% if login_form.non_field_errors %}
+        <div class="alert alert-danger">
+          {{ login_form.non_field_errors.as_text }}
+        </div>
+      {% endif %}
+
+      {{ login_form.as_p }}
+
+      <button type="submit" name="login_submit" class="btn btn-primary">Войти</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

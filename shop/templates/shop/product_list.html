@@ -1,0 +1,63 @@
+<!-- shop/templates/shop/product_list.html -->
+
+{% for product in products %}
+  <div style="border: 1px solid #ddd; padding: 15px; margin: 10px; width: 250px; display: inline-block;">
+    <h3>{{ product.name }}</h3>
+    <p>{{ product.description }}</p>
+    <p><strong>{{ product.price }} ₽</strong></p>
+
+    <!-- 1. Форма теперь имеет ID для работы JS -->
+    <form id="add-to-cart-form-{{ product.id }}" action="{% url 'cart_add' product.id %}" method="post" style="display:inline;">
+        {% csrf_token %}
+
+        <!-- 2. Скрытые поля с данными -->
+        <input type="hidden" name="product" value="{{ product.id }}">
+        <input type="hidden" name="override_quantity" value="False">
+
+        <input type="number" name="quantity" value="1" min="1" max="10" style="width: 60px;">
+        <!-- 3. Кнопка "Добавить" теперь type="button" -->
+        <button type="button" class="add-to-cart-btn" data-form-id="add-to-cart-form-{{ product.id }}">+ Добавить</button>
+    </form>
+
+    <!-- 4. Отдельная кнопка для перехода в корзину -->
+    <a href="{% url 'cart_detail' %}" class="btn-go-to-cart">Перейти в корзину</a>
+
+  </div>
+{% endfor %}
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+
+    addToCartButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const formId = button.getAttribute('data-form-id');
+            const form = document.getElementById(formId);
+
+            // Находим поле количества внутри этой формы ---
+            const quantityInput = form.querySelector('input[name="quantity"]');
+            const quantityValue = quantityInput.value;
+
+            // Обновляем скрытое поле формы перед отправкой ---
+            // Создаем объект FormData на основе формы, он уже будет содержать новое значение
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Ошибка сети');
+                // Уведомление убрано по вашему запросу
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+            });
+        });
+    });
+});
+</script>

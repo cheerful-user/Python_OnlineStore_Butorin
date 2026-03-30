@@ -1,0 +1,49 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<div class="container">
+  <h1>Детали заказа № {{ order.id }}</h1>
+
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Информация о заказе</h5>
+          <p><strong>Статус:</strong> {{ order.status }}</p>
+          <p><strong>Дата оформления:</strong> {{ order.created_at|date:"d.m.Y H:i" }}</p>
+          <p><strong>Клиент:</strong> {{ order.client }}</p>
+          <p><strong>Адрес доставки:</strong> {{ order.client.address_line_1 }}, {{ order.client.city }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <h5 class="mb-3">Состав заказа</h5>
+      <table class="table table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th>Товар</th>
+            <th>Количество</th>
+            <th>Цена за ед.</th>
+            <th>Сумма</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items %} <!-- ИСПОЛЬЗУЕМ НОВЫЙ СПИСОК -->
+            <tr>
+              <td>{{ item.product.name }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.unit_price_at_purchase }} ₽</td>
+              <!-- ПРОСТО ВЫВОДИМ ГОТОВОЕ ПОЛЕ -->
+              <td>{{ item.total_price }} ₽</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="4" class="text-center">Заказ не содержит товаров.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <p class="h4 mt-4">Итоговая сумма: {{ order.get_total_price }} ₽</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

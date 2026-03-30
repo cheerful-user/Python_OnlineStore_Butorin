@@ -1,0 +1,16 @@
+[
+{
+  "model": "shop.inventory",
+  "pk": 1,
+  "fields": {
+    "quantity_in_stock": 10
+  }
+},
+{
+  "model": "shop.inventory",
+  "pk": 2,
+  "fields": {
+    "quantity_in_stock": 100
+  }
+}
+]

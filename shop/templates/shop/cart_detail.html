@@ -1,0 +1,54 @@
+<!-- shop/templates/shop/cart_detail.html -->
+
+<h1>Ваша корзина</h1>
+
+{% if cart %}
+  <table style="width: 100%; border-collapse: collapse;">
+    <tr style="background-color: #f2f2f2;">
+      <th style="padding: 12px; text-align: left;">Товар</th>
+      <th style="padding: 12px; text-align: left;">Цена</th>
+      <th style="padding: 12px; text-align: left;">Количество</th>
+      <th style="padding: 12px; text-align: left;">Сумма</th>
+      <th style="padding: 12px; text-align: left;">Действие</th>
+    </tr>
+
+    {% for item in cart %}
+    <tr>
+      <td style="padding: 12px; border-bottom: 1px solid #ddd;">{{ item.product.name }}</td>
+      <td style="padding: 12px; border-bottom: 1px solid #ddd;">{{ item.product.price }} ₽</td>
+
+      <!-- ИСПРАВЛЕНО: Показываем количество из объекта 'item' -->
+      <td style="padding: 12px; border-bottom: 1px solid #ddd;">{{ item.quantity }}</td>
+
+      <td style="padding: 12px; border-bottom: 1px solid #ddd;">{{ item.total_price }} ₽</td>
+
+      <td style="padding: 12px; border-bottom: 1px solid #ddd;">
+        <!-- Кнопка для удаления товара из корзины -->
+        <a href="{% url 'cart_remove' item.product.id %}" style="color: red;">Удалить</a>
+      </td>
+    </tr>
+
+    <!-- НОВОЕ: Выводим общую сумму на последней итерации цикла -->
+    {% if forloop.last %}
+      <tr style="font-weight: bold; border-top: 2px solid #000;">
+        <td colspan="3" align="right" style="padding: 12px;">Общая сумма:</td>
+        <td style="padding: 12px;">{{ cart.get_total_price }} ₽</td>
+        <td></td>
+      </tr>
+    {% endif %}
+
+    {% empty %}
+      <tr>
+        <td colspan="5" style="text-align: center; padding: 20px;">Ваша корзина пуста.</td>
+      </tr>
+    {% endfor %}
+
+  </table>
+{% else %}
+  <p>Ваша корзина пуста.</p>
+{% endif %}
+
+<br>
+<a href="{% url 'product_list' %}">Продолжить покупки</a> |
+<a href="{% url 'order_create' %}">Оформить заказ</a> |
+<a href="{% url 'home' %}">Вернуться на главную страницу</a>

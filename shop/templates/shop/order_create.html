@@ -1,0 +1,41 @@
+<!-- shop/templates/shop/order_create.html -->
+{% extends 'base.html' %}
+{% block content %}
+<h1>Оформление заказа</h1>
+<!-- ... код вывода корзины ... -->
+<p><strong>Общая сумма: {{ cart.get_total_price }} ₽</strong></p>
+
+<!-- НОВОЕ УСЛОВИЕ: Показываем блок с формами ТОЛЬКО гостям -->
+{% if not user.is_authenticated %}
+<div style="display: flex; gap: 20px;">
+  <div style="flex: 1; border: 1px solid #ccc; padding: 20px;">
+    <h2>Регистрация</h2>
+    <form method="post">
+      {% csrf_token %}
+      <h3>Создайте аккаунт</h3>
+      {{ register_user_form.as_p }}
+      <h3>Ваши данные</h3>
+      {{ register_client_form.as_p }}
+      <button type="submit" name="register_submit">Зарегистрироваться</button>
+    </form>
+  </div>
+  <div style="flex: 1; border: 1px solid #ccc; padding: 20px;">
+    <h2>Вход</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ login_form.as_p }}
+      <button type="submit" name="login_submit">Войти</button>
+    </form>
+  </div>
+</div>
+{% else %}
+<!-- Этот блок увидят авторизованные пользователи -->
+<div style="text-align: center; margin-top: 20px;">
+    <p>Вы вошли как: <strong>{{ user.username }}</strong></p>
+    <p>Для продолжения нажмите кнопку ниже.</p>
+    <button formaction="{% url 'order_create' %}" formmethod="post" class="btn btn-primary">
+        Оформить заказ под текущим аккаунтом
+    </button>
+</div>
+{% endif %}
+{% endblock %}
